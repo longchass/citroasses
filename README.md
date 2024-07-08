@@ -1,6 +1,5 @@
-# Sections
+# Design principle
 
-- Design principle
 sacrifice is clearly made given the goal is constricted within a single docker container
 
 Airgap principle should be followed where the production data should not be queriable from a single host 
@@ -15,10 +14,15 @@ Accept transaction (GET, POST) PUT and DELETE could be implmented but deemed une
 
 category must be specified at the query level
 
+one database intake and scales per API cluster
+
 ## Files and usage
 Dockerfile: run and set some environment variables
+
 main.py: pull api.py and dabatase.py and run the localhost
+
 api.py: fastapi to handle api declaration and communication with database
+
 database.py: postgressql database
 
 ## Database choices
@@ -67,4 +71,4 @@ Do.
 - Some "smarts" logic can be done for automatic categorisation based on transactionType and counterpartName. But this is always too risky to implement without some base logic first. i.e location-based, store-based, ammount-based. It's better to ingest directly into a lakehouse and do some categorisation then. Or stream the data through ETL pipeline so the logic is always easily checked and ajustable. 
 
 - Haven't check for faulty input for utc time
-- respond id doesn't 
+- respond id doesn't reflect actual uid in the database

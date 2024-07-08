@@ -13,7 +13,7 @@ DB_PASSWORD = os.getenv("POSTGRES_PASSWORD", "dockerpassword")
 DB_NAME = os.getenv("POSTGRES_DB", "mydb")
 DB_HOST = os.getenv("DB_HOST", "localhost")
 
-SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+SQLALCHEMY_DATABASE_URL = f"postgresql://myuser:mypassword@db/mydb"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
