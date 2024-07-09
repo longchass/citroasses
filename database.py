@@ -8,12 +8,12 @@ import uuid
 import enum
 
 # Database connection setup can be specified through docker environment variables
-DB_USER = os.getenv("POSTGRES_USER", "docker")
-DB_PASSWORD = os.getenv("POSTGRES_PASSWORD", "dockerpassword")
+DB_USER = os.getenv("POSTGRES_USER", "admin")
+DB_PASSWORD = os.getenv("POSTGRES_PASSWORD", "admin")
 DB_NAME = os.getenv("POSTGRES_DB", "mydb")
 DB_HOST = os.getenv("DB_HOST", "localhost")
 
-SQLALCHEMY_DATABASE_URL = f"postgresql://myuser:mypassword@db/mydb"
+SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -23,10 +23,9 @@ Base = declarative_base()
 #We want to refactor the Base class to follow BCNF principles. We will create 3 new tables: sectors, transaction_types, and counterparties.
 
 class CategoryEnum(enum.Enum):
-    RETAIL = "retail"
-    GROCERIES = "groceries"
-    UTILITIES = "utilities"
-    UNVALIDATED = "UNVALIDATED"
+    RETAIL = "Retail"
+    GROCERIES = "Groceries"
+    UTILITIES = "Utilities"
 
 #made up some enum values for TransactionTypeEnum
 class TransactionTypeEnum(enum.Enum):

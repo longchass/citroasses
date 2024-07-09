@@ -5,8 +5,8 @@ services:
     image: postgres:13
     environment:
       POSTGRES_DB: mydb
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -15,7 +15,7 @@ services:
   api:
     build: .
     environment:
-      DATABASE_URL: postgresql://myuser:mypassword@db/mydb
+      DATABASE_URL: postgresql://admin:admin@db/mydb
       API_KEY: 1234
     depends_on:
       - db

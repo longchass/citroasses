@@ -18,13 +18,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container
 COPY . .
 
-# Expose port 5432 for PostgreSQL and 8000 for the FastAPI application
-EXPOSE 5432 8000
+# Expose port 5432 for PostgreSQL and 80 for the FastAPI application
+EXPOSE 5432 80
 
 # Set environment variables for PostgreSQL
 ENV POSTGRES_USER="admin"
 ENV POSTGRES_PASSWORD="admin"
-ENV POSTGRES_DB="default"
+ENV POSTGRES_DB="mydb"
 
 # Create a script to initialize PostgreSQL, create user and database, and start the FastAPI app
 RUN echo "#!/bin/bash\n\
@@ -44,7 +44,7 @@ su - postgres -c \"psql -c \\\"CREATE USER $POSTGRES_USER WITH PASSWORD '$POSTGR
 su - postgres -c \"createdb -O $POSTGRES_USER $POSTGRES_DB\"\n\
 \n\
 # Start the FastAPI app\n\
-uvicorn main:app --host 0.0.0.0 --port 8000\n\
+uvicorn main:app --host 0.0.0.0 --port 80\n\
 " > /start.sh && chmod +x /start.sh
 
 # Run the start script

@@ -37,6 +37,15 @@ database.py: postgressql database
     an enum table is created and will create more transactions enum type when necessary.
 
     Same principle should be applied to all other objects where there is some sort of aggregation or categorisation values to be used.
+## Categorisation
+We will catgorise the transaction as it comes
+
+Check api.py to use get_category_enum_from_counterpart for business logic case-by-case regex classification
+
+
+Check api.py to use get_category_enum_from_counterpart_nlp for using NLP processing for zero-shot classification
+
+The default in the repo is get_category_enum_from_counterpart_nlp
 
 ## Setup for local development
     Assuming you have full source code and running a Docker Desktop setup to test changes and features, run the following steps
@@ -45,7 +54,7 @@ database.py: postgressql database
     - docker image list  -> Get the id of the image that you just have built
     - docker run -p 80:80 <image-id-you-got-from above>
     
-    Assuming you want to scale up the instances do:
+    Assuming you want to scale up the instances do: (This currently doesn't work since connection is required to download the complete model weights from huggingface and cache it, upon trigger the api and instance will automatically kill itself and there is no solution to lock start up yet until this has completed)
     - cd <location-of-this-folder>
     - docker-compose up --build -d
     - docker-compose up -d --scale api=5
@@ -54,13 +63,12 @@ There are two reccomended tool to test this API manually
 - curl (CLI-based)
 - postman (GUI-based)
 
-Running the bash script load.sh will pre-load some transactions.
-Running the bash script test.sh will curl and demonstrate the API end point capabilities
+Running the  python script to will pre-load some transactions and test.
 
-Note: you might need to load into unix file if you're not using windows command
-Do. 
-- dos2unix load.sh
-- dos2unix test.sh
+```
+python load.py
+python test.py
+```
 
 ## Sacrifices
 
@@ -72,3 +80,11 @@ Do.
 
 - Haven't check for faulty input for utc time
 - respond id doesn't reflect actual uid in the database
+- It is a bad idea to process NLP or LLM or any kind of prompt to categorise at the docker level. These are data that will be used for key metrics and business insights. It should be visible at higher level. At the very least. There should be a database reference that these docker container can reference from. The LLM can be used at a daily level or hourly level to process and categorise the transaction
+- No OpenAI ChatGPT. We will use open-source to avoid vendor lock-in. There many open source tool that exists that will help us streamline and systematically evaluate and test these model and use traditional ML metrics to evaluate them. OpenAI does not offer these tools and their progress is absolutely slow.
+- We currently running CPU for NLP
+
+
+## Changelog
+
+Changed bash shell script load.sh, test.sh data to python script load.py test.py
