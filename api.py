@@ -164,8 +164,8 @@ async def get_categories_summary(
         func.count(Transaction.id).label('transaction_count'),
         func.sum(Transaction.amount).label('total_amount')
     ).filter(
-        # Transaction.transaction_time_utc >= start_date,
-        # Transaction.transaction_time_utc < end_date + timedelta(days=1)
+        Transaction.transaction_time_utc >= start_date,
+        Transaction.transaction_time_utc < end_date + timedelta(days=1)
     ).group_by(Transaction.category).all()
 
     return [
@@ -200,8 +200,8 @@ async def get_transactions_summary(
         func.count(Transaction.id).label('transaction_count'),
         func.sum(Transaction.amount).label('total_amount')
     ).filter(
-        # Transaction.transaction_time_utc >= start_date,
-        # Transaction.transaction_time_utc < end_date + timedelta(days=1),
+        Transaction.transaction_time_utc >= start_date,
+        Transaction.transaction_time_utc < end_date + timedelta(days=1),
         Category.name == category_enum
     ).group_by(Transaction.category).all()
     
@@ -237,8 +237,8 @@ async def get_unique_counterparts_by_category(
     logger.info(Transaction.category == category_enum)
     counterparts = db.query(Counterparty.name).distinct().join(Transaction).filter(
         Transaction.category == category_enum,
-        # Transaction.transaction_time_utc >= start_date,
-        # Transaction.transaction_time_utc < end_date + timedelta(days=1)
+        Transaction.transaction_time_utc >= start_date,
+        Transaction.transaction_time_utc < end_date + timedelta(days=1)
     ).all()
     
     return [c.name for c in counterparts]
